@@ -100,9 +100,6 @@ RealSpeakは、実際の英会話環境をより忠実に再現し、ユーザ�
   - Supabase（PostgreSQL）
   - ベクトルデータベース（pgvector）
 
-- **API管理**：
-  - tRPC（型安全なAPI通信）
-
 ### 4.2 フロントエンド
 
 - **Web**：
@@ -267,3 +264,91 @@ RealSpeakは、実際の英会話環境をより忠実に再現し、ユーザ�
    - インフラストラクチャの最適化
    - キャッシング戦略
    - 負荷テストと改善
+
+## 7. プロジェクトディレクトリ構造
+
+プロジェクトは以下のディレクトリ構造で開発を進めます。モノレポ構造を採用し、フロントエンドとバックエンドを一つのリポジトリで管理します。
+
+```
+/RealSpeak
+│
+├── /apps                      # モノレポ構造（複数アプリケーション管理）
+│   ├── /web                   # フロントエンドアプリケーション（Next.js）
+│   │   ├── /app               # App Router
+│   │   │   ├── /api           # API Routes
+│   │   │   ├── /(auth)        # 認証関連ページ
+│   │   │   ├── /dashboard     # ダッシュボード
+│   │   │   ├── /conversations # 会話生成・表示
+│   │   │   └── /settings      # ユーザー設定
+│   │   ├── /components        # 共通コンポーネント
+│   │   │   ├── /ui            # UIコンポーネント
+│   │   │   ├── /conversation  # 会話関連コンポーネント
+│   │   │   └── /audio         # 音声再生コンポーネント
+│   │   ├── /lib               # ユーティリティ関数
+│   │   │   ├── /supabase      # Supabaseクライアント
+│   │   │   └── /audio         # 音声処理ユーティリティ
+│   │   ├── /hooks             # カスタムReactフック
+│   │   ├── /styles            # グローバルスタイル
+│   │   ├── /public            # 静的ファイル
+│   │   ├── next.config.js     # Next.js設定
+│   │   ├── package.json
+│   │   └── tsconfig.json
+│   │
+│   └── /api                   # バックエンドAPI（Python/FastAPI）
+│       ├── /src
+│       │   ├── /api           # APIエンドポイント
+│       │   │   ├── /v1        # APIバージョン
+│       │   │   └── router.py  # APIルーター
+│       │   ├── /core          # コアロジック
+│       │   │   ├── /config    # 設定
+│       │   │   ├── /security  # 認証・認可
+│       │   │   └── /errors    # エラーハンドリング
+│       │   ├── /services      # ビジネスロジック
+│       │   │   ├── /llm       # LLM関連サービス
+│       │   │   ├── /audio     # 音声合成サービス
+│       │   │   ├── /context   # コンテキスト分析
+│       │   │   └── /user      # ユーザー関連サービス
+│       │   ├── /db            # データベース
+│       │   │   ├── /models    # データモデル
+│       │   │   ├── /crud      # CRUD操作
+│       │   │   └── /migrations # マイグレーション
+│       │   ├── /utils         # ユーティリティ
+│       │   └── main.py        # アプリケーションエントリーポイント
+│       ├── /tests             # テスト
+│       ├── requirements.txt   # 依存関係
+│       └── Dockerfile         # Dockerファイル
+│
+├── /packages                  # 共有パッケージ
+│   ├── /eslint-config         # ESLint設定
+│   ├── /typescript-config     # TypeScript設定
+│   ├── /ui                    # 共有UIコンポーネント
+│   └── /utils                 # 共有ユーティリティ
+│
+├── /docs                      # ドキュメント
+│   ├── product_design.md      # 製品設計書
+│   ├── technical_architecture.md # 技術アーキテクチャ
+│   └── api_docs.md            # API仕様書
+│
+├── /scripts                   # ユーティリティスクリプト
+│   ├── setup.sh               # セットアップスクリプト
+│   └── deploy.sh              # デプロイスクリプト
+│
+├── /infra                     # インフラストラクチャコード
+│   ├── /vercel                # Vercel設定
+│   └── /supabase              # Supabase設定・マイグレーション
+│
+├── .github                    # GitHub Actions
+│   └── /workflows             # CI/CDワークフロー
+│
+├── .gitignore
+├── package.json               # ルートパッケージ
+├── turbo.json                 # Turborepo設定
+└── README.md
+```
+
+### 7.1 ディレクトリ構造の特徴
+
+- **モノレポ構造**: Turborepoを使用して、フロントエンドとバックエンドを一つのリポジトリで管理
+- **機能ベースの分割**: 関連するコードを機能ごとにグループ化
+- **スケーラビリティ**: 将来の拡張に対応できる構造
+- **モジュール性**: 明確な責任分担と依存関係の管理
