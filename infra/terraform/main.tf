@@ -5,7 +5,6 @@
 resource "google_project_service" "auth_services" {
   for_each = toset([
     "firebase.googleapis.com",           # Firebase
-    "identitytoolkit.googleapis.com",    # Identity Platform (Firebase Auth)
   ])
 
   project = var.project_id
