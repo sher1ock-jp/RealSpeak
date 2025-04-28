@@ -97,8 +97,8 @@ RealSpeakは、実際の英会話環境をより忠実に再現し、ユーザ�
   - Web Audio API（音声オーバーラップ処理）
 
 - **データベース**：
-  - Supabase（PostgreSQL）
-  - ベクトルデータベース（pgvector）
+  - Google Cloud SQL（PostgreSQL）
+  - ベクトルデータベース（Vertex AI Vector Search）
 
 ### 4.2 フロントエンド
 
@@ -117,11 +117,11 @@ RealSpeakは、実際の英会話環境をより忠実に再現し、ユーザ�
 ### 4.3 インフラストラクチャ
 
 - **クラウドサービス**：
-  - Vercel（デプロイ、サーバーレス関数）
-  - Supabase（バックエンドサービス）
+  - Vercel（フロントエンドデプロイ、Next.jsルーティング）
+  - Google Cloud（バックエンドサービス、API、データベース）
 
 - **認証**：
-  - Supabase Auth
+  - Firebase Authentication
 
 - **モニタリング**：
   - Sentry（エラー追跡）
@@ -133,29 +133,29 @@ RealSpeakは、実際の英会話環境をより忠実に再現し、ユーザ�
 ### 4.4 データ処理アーキテクチャ
 
 - **ベクトルデータベースの活用**：
-  - ユーザーの会話履歴をベクトル化して保存し、意味ベースの検索を実現
+  - ユーザーの会話履歴をベクトル化して保存し、Vertex AI Vector Searchで意味ベースの検索を実現
   - ユーザーの好みや関心をベクトルとして保存し、パーソナライゼーションに活用
   - 画像から抽出したコンテキスト情報とユーザー履歴を関連付け
 
 - **データモデル例**：
   ```
-  -- 会話履歴テーブル
+  -- 会話履歴テーブル（Cloud SQL - PostgreSQL）
   CREATE TABLE conversation_history (
     id UUID PRIMARY KEY,
     user_id UUID REFERENCES users(id),
     conversation_text TEXT,
-    embedding VECTOR(1536),  -- OpenAIのエンベディングサイズ
+    embedding_id STRING,  -- Vertex AI Vector Searchの参照ID
     metadata JSONB,
     created_at TIMESTAMP WITH TIME ZONE
   );
   
-  -- ユーザー好みテーブル
+  -- ユーザー好みテーブル（Cloud SQL - PostgreSQL）
   CREATE TABLE user_preferences (
     id UUID PRIMARY KEY,
     user_id UUID REFERENCES users(id),
     preference_type TEXT,
     preference_value TEXT,
-    embedding VECTOR(1536),
+    embedding_id STRING,  -- Vertex AI Vector Searchの参照ID
     created_at TIMESTAMP WITH TIME ZONE
   );
   ```
@@ -285,7 +285,8 @@ RealSpeakは、実際の英会話環境をより忠実に再現し、ユーザ�
 │   │   │   ├── /conversation  # 会話関連コンポーネント
 │   │   │   └── /audio         # 音声再生コンポーネント
 │   │   ├── /lib               # ユーティリティ関数
-│   │   │   ├── /supabase      # Supabaseクライアント
+│   │   │   ├── /firebase      # Firebase認証クライアント
+│   │   │   ├── /gcloud        # Google Cloudクライアント
 │   │   │   └── /audio         # 音声処理ユーティリティ
 │   │   ├── /hooks             # カスタムReactフック
 │   │   ├── /styles            # グローバルスタイル
@@ -335,7 +336,7 @@ RealSpeakは、実際の英会話環境をより忠実に再現し、ユーザ�
 │
 ├── /infra                     # インフラストラクチャコード
 │   ├── /vercel                # Vercel設定
-│   └── /supabase              # Supabase設定・マイグレーション
+│   └── /gcloud                # Google Cloud設定・マイグレーション
 │
 ├── .github                    # GitHub Actions
 │   └── /workflows             # CI/CDワークフロー
