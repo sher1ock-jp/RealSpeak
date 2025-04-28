@@ -59,7 +59,7 @@ jobs:
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
-        run: terraform plan -no-color -var="environment=dev" -var="project_id=${{ secrets.GCP_PROJECT_ID_DEV }}"
+        run: terraform plan -no-color -var="environment=dev" -var="project_id=${{ secrets.GCP_PROJECT_ID_DEV }}" -var="credentials=${{ secrets.GOOGLE_CREDENTIALS_DEV }}"
         working-directory: ${{ env.CONFIG_DIRECTORY }}
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS_DEV }}
@@ -96,7 +96,7 @@ jobs:
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
-        run: terraform apply -auto-approve -var="environment=dev" -var="project_id=${{ secrets.GCP_PROJECT_ID_DEV }}"
+        run: terraform apply -auto-approve -var="environment=dev" -var="project_id=${{ secrets.GCP_PROJECT_ID_DEV }}" -var="credentials=${{ secrets.GOOGLE_CREDENTIALS_DEV }}"
         working-directory: ${{ env.CONFIG_DIRECTORY }}
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS_DEV }}

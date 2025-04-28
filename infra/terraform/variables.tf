@@ -39,3 +39,10 @@ variable "google_oauth_client_secret" {
   default     = "" # 実際の値に置き換えてください
   sensitive   = true
 }
+
+variable "credentials" {
+  description = "Google Cloud認証情報"
+  type        = string
+  default     = null
+  sensitive   = true
+}
