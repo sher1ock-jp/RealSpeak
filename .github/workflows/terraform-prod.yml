@@ -33,6 +33,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Update Backend Configuration for Production
+        run: |
+          sed -i 's/realspeak-dev/realspeak-prod/g' ${{ env.CONFIG_DIRECTORY }}/backend.tf
+          cat ${{ env.CONFIG_DIRECTORY }}/backend.tf
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
