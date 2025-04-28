@@ -4,13 +4,9 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'infra/terraform/**'
   pull_request:
     branches:
       - main
-    paths:
-      - 'infra/terraform/**'
   workflow_dispatch:
 
 env:
