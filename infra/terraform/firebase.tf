@@ -36,17 +36,19 @@ resource "google_identity_platform_config" "default" {
   # 匿名ユーザーの自動削除設定
   autodelete_anonymous_users = true
 
-  depends_on = [
-    google_project_service.identity_platform
+  # 認証ドメインの設定
+  # 本番環境では実際のドメインに変更
+  # ローカル開発用にlocalhostを追加
+  authorized_domains = [
+    "localhost",
+    # Firebase Hostingは使用しないため、Vercelのドメインを設定
+    "${var.app_name}-${var.environment}.vercel.app"
   ]
-}
 
-# メール/パスワード認証の有効化
-resource "google_identity_platform_project_default_config" "password" {
-  provider = google-beta
-  project  = var.project_id
-  
+  # メール/パスワード認証の有効化
   sign_in {
+    allow_duplicate_emails = false
+    
     email {
       enabled           = true
       password_required = true
@@ -54,7 +56,7 @@ resource "google_identity_platform_project_default_config" "password" {
   }
 
   depends_on = [
-    google_identity_platform_config.default
+    google_project_service.identity_platform
   ]
 }
 
@@ -74,27 +76,8 @@ resource "google_identity_platform_oauth_idp_config" "google" {
   ]
 }
 
-# 認証ドメインの設定
-resource "google_identity_platform_project_default_config" "auth_domains" {
-  provider = google-beta
-  project  = var.project_id
-  
-  # 認証ドメインの設定
-  # 本番環境では実際のドメインに変更
-  # ローカル開発用にlocalhostを追加
-  authorized_domains = [
-    "localhost",
-    # Firebase Hostingは使用しないため、Vercelのドメインを設定
-    "${var.app_name}-${var.environment}.vercel.app"
-  ]
-  
-  depends_on = [
-    google_identity_platform_config.default
-  ]
-}
-
-# Firebase Web App設定の出力
-resource "google_firebase_web_app_config" "default" {
+# Firebase Web App設定の取得（データソース）
+data "google_firebase_web_app_config" "default" {
   provider   = google-beta
   project    = var.project_id
   web_app_id = google_firebase_web_app.default.app_id
