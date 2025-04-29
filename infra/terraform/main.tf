@@ -4,7 +4,7 @@
 # ログイン機能に必要なGoogle APIの有効化
 resource "google_project_service" "auth_services" {
   for_each = toset([
-    "firebase.googleapis.com",           # Firebase
+    "firebase.googleapis.com", # Firebase
   ])
 
   project = var.project_id

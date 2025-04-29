@@ -49,7 +49,7 @@ resource "google_identity_platform_config" "default" {
   # メール/パスワード認証の有効化
   sign_in {
     allow_duplicate_emails = false
-    
+
     email {
       enabled           = true
       password_required = true
