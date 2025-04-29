@@ -66,7 +66,7 @@ resource "google_identity_platform_oauth_idp_config" "google" {
   project        = var.project_id
   display_name   = "Google"
   enabled        = true
-  name           = "projects/${var.project_id}/oauthIdpConfigs/oidc.google"
+  name           = "projects/${var.project_id}/oauthIdpConfigs/google.com"
   issuer         = "https://accounts.google.com"
   client_id      = var.google_oauth_client_id
   client_secret  = var.google_oauth_client_secret
