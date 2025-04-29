@@ -42,7 +42,8 @@ resource "google_identity_platform_config" "default" {
   authorized_domains = [
     "localhost",
     # Firebase Hostingは使用しないため、Vercelのドメインを設定
-    "${var.app_name}-${var.environment}.vercel.app"
+    "${var.app_name}-${var.environment}.vercel.app",
+    "real-speak-git-develop-sher1ocks-projects.vercel.app"
   ]
 
   # メール/パスワード認証の有効化
