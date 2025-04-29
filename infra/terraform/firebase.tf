@@ -60,17 +60,15 @@ resource "google_identity_platform_config" "default" {
   ]
 }
 
-# Google認証プロバイダーの設定
-resource "google_identity_platform_oauth_idp_config" "google" {
-  provider       = google-beta
-  project        = var.project_id
-  display_name   = "Google"
-  enabled        = true
-  name           = "projects/${var.project_id}/oauthIdpConfigs/oidc.google"
-  issuer         = "https://accounts.google.com"
-  client_id      = var.google_oauth_client_id
-  client_secret  = var.google_oauth_client_secret
-  
+# Google認証プロバイダーの設定（デフォルトサポートIDP）
+resource "google_identity_platform_default_supported_idp_config" "google" {
+  provider      = google-beta
+  project       = var.project_id
+  idp_id        = "google.com"
+  client_id     = var.google_oauth_client_id
+  client_secret = var.google_oauth_client_secret
+  enabled       = true
+
   depends_on = [
     google_identity_platform_config.default
   ]
